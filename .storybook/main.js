@@ -1,17 +1,23 @@
 module.exports = {
-  stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
-  staticDirs: ["../public"],
-  addons: [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
-    "@storybook/preset-create-react-app",
+  stories: [
+    "../stories/**/*.stories.mdx",
+    "../stories/**/*.stories.@(js|jsx|ts|tsx)",
   ],
-  framework: "@storybook/react",
-  core: {
-    builder: "@storybook/builder-webpack5",
-  },
+  addons: ["@storybook/addon-links", "@storybook/addon-essentials"],
+  // NOTE: これ消したらコンポーネント出てこなくなる
   features: {
-    interactionsDebugger: true,
+    emotionAlias: false,
+  },
+  typescript: {
+    reactDocgen: false,
+  },
+  webpackFinal: async (config) => {
+    // NOTE: これ消したらエラーになる
+    config.module.rules.push({
+      test: /\.mjs$/,
+      include: /node_modules/,
+      type: "javascript/auto",
+    });
+    return config;
   },
 };
